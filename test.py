@@ -46,9 +46,7 @@ class ImageSource(object):
                     if frame is None:
                         continue
 
-                    emint(frame)
-                    yield (b'--frame\r\n'
-                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                    emit("new-frame", frame)
             # TODO check for shutdown
 
 
