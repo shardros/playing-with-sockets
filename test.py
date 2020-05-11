@@ -3,11 +3,12 @@ import time
 import logging
 import threading
 import copy
+import base64
 
 from flask import Flask, render_template, Response
 from PIL import Image, ImageDraw
 from io import BytesIO, StringIO
-
+from flask_socketio import SocketIO, emit
 
 class ImageSource(object):
     def __init__(self):
@@ -32,35 +33,31 @@ class ImageSource(object):
             with self.image_lock:
                 self.image = img_io.read()
             print("Updated image")
-            time.sleep(10)
+            time.sleep(1)
 
     def get_frame(self):
         while True:
             with self.image_lock:
                 frame = self.image
 
-                if frame is None:
-                    continue
-
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
+                if frame is not None:
+                    print("emitting frame")
+                    emit('image', {"image": True, "buffer": frame})
+            time.sleep(1)
 
 app = Flask(__name__)
 image_source = ImageSource()
+socketio = SocketIO(app)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/video_feed')
-def video_feed():
-    res = Response(image_source.get_frame(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
-    print(res)
-    return res
+@socketio.on('message')
+def handle_message(message):
+    print('received message: ' + str(message))
+    image_source.get_frame()
+
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)@socketio.on('message')
-def handle_message(message):
-    print('received message: ' + message)
+    socketio.run(app, host='0.0.0.0', debug=True)
