@@ -33,17 +33,17 @@ class ImageSource(object):
             with self.image_lock:
                 self.image = img_io.read()
             print("Updated image")
-            time.sleep(1)
+            time.sleep(0.1)
 
     def get_frame(self):
         while True:
+            time.sleep(1)
             with self.image_lock:
                 frame = self.image
 
                 if frame is not None:
                     print("emitting frame")
                     emit('image', {"image": True, "buffer": frame})
-            time.sleep(1)
 
 app = Flask(__name__)
 image_source = ImageSource()

@@ -5,7 +5,6 @@
   <body>
     <h1>Video Streaming Demonstration</h1>
     <img id="photo"/>
-    <canvas id="my-canvas">Your browser does not support canvas</canvas>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf-8">
         var socket = io();
@@ -16,16 +15,7 @@
         var ctx = document.getElementById('my-canvas').getContext('2d');
 
         socket.on("image", function(info) {
-          console.log("got new image data");
           if (info.image) {
-            // var img = new Image();
-            // img.src = 'data:image/jpeg;base64,' + info.buffer;
-            // console.log("set src to" + img.src);
-            // img.onload = () => {
-            //   ctx.drawImage(img, 0, 0);
-            //   console.log("image loaded")
-            // }
-
             var arrayBufferView = new Uint8Array( info.buffer );
             var blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
             var reader = new FileReader();
