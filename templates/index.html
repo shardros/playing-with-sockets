@@ -9,10 +9,8 @@
     <script type="text/javascript" charset="utf-8">
         var socket = io();
         socket.on('connect', function() {
-          socket.emit('message', {data: 'I\'m connected!'});
+          console.log("client connected to image socket");
         });
-
-        var ctx = document.getElementById('my-canvas').getContext('2d');
 
         socket.on("image", function(info) {
           if (info.image) {

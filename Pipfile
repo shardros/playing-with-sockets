@@ -7,11 +7,11 @@ verify_ssl = true
 pylint = "*"
 
 [packages]
-flask = "*"
-pillow = "*"
+Flask = "*"
+Pillow = "*"
 socketio = "*"
-flask-socketio = "*"
+Flask-SocketIO = "*"
 python-socketio = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.8"
